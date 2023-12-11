@@ -82,14 +82,18 @@ def calcular_solucoes_V(C11, C13, C33, C55, C66, thetas, rho):
 
     for theta in thetas:
         theta_rad = rad(theta)  # Converte ângulo para radianos
-        matriz = Matrix([[C11*sin(theta_rad)**2 + C55*cos(theta_rad)**2 - rho*V**2, 0, (C13 + C55)*sin(theta_rad)*cos(theta_rad)],
-                         [0, C66*sin(theta_rad)**2 + C55*cos(theta_rad)**2 - rho*V**2,0],
-                         [(C13 + C55)*sin(theta_rad)*cos(theta_rad),0, C55*sin(theta_rad)**2 + C33*cos(theta_rad)**2 - rho*V**2]])
+        A=[C11*sin(theta_rad)**2 + C55*cos(theta_rad)**2 - rho*V**2, 0, (C13 + C55)*sin(theta_rad)*cos(theta_rad)]
+        B=[0, C66*sin(theta_rad)**2 + C55*cos(theta_rad)**2 - rho*V**2,0]
+        C=[(C13 + C55)*sin(theta_rad)*cos(theta_rad),0, C55*sin(theta_rad)**2 + C33*cos(theta_rad)**2 - rho*V**2]
+        matriz = Matrix([A,
+                         B,
+                         C])
         solucao_V = solve(det(matriz), V**2)
         #if solucao_V:
         Vsv.append(np.sqrt(float(solucao_V[0])))
         Vsh.append(np.sqrt(float(solucao_V[1])))
         Vp.append(np.sqrt(float(solucao_V[-1])))
+        # print("count")
 
     return Vsv, Vsh, Vp
 
@@ -164,7 +168,7 @@ axes[1].set_xlabel('$\theta$ (radianos)')
 
 # Subplot 3: Vsh
 sns.lineplot(x=thetas[1:], y=Vsh, ax=axes[2], color='red')
-sns.lineplot(x=thetas[0], y=Vsh0, ax=axes[2], color='red')
+sns.scatterplot(x=thetas[0], y=Vsh0, ax=axes[2], color='red')
 axes[2].set_title('Vsh')
 axes[2].set_xlabel('$\theta$ (radianos)')
 
